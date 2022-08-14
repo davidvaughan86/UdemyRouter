@@ -1,7 +1,20 @@
 const express = require('express')
 const app = express()
-const PORT = 4500
+const PORT = 7000
+const session = require('express-session')
+var cookieParser = require('cookie-parser');
+app.use(cookieParser());
 
+
+//setting the middleware to pass in the sessions. Secret is to make the hash more distguishable than what it will create. resave the session when something is written to the session. SaveU means the session will be saved as a cookie even without anything written. Set the session before the routes if using routes
+
+
+app.use(session({
+    secret: 'keyboard cat',
+    resave: false,
+    saveUninitialized: false,
+   
+}))
 const mustacheExpress=require('mustache-express')
 
 const bodyParser=require('body-parser')
@@ -32,10 +45,24 @@ app.use(bodyParser.urlencoded({extended : false}))
 
 
 
-app.get ('/person' , (req, res) => {
+app.get ('/' , (req, res) => {
     let person = []
     res.render('person', person)
 })
+
+
+app.get("/test", (req, res) => {
+    const sess = req.session;
+    sess.hello = true;
+    console.log(sess);
+    if (sess){
+        console.log('yes!')
+    } else
+        console.log('no!')
+    
+})
+
+
 
 
 
